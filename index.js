@@ -19,7 +19,7 @@ function Watcher(builder, options) {
   this.options.filter = this.options.filter || defaultFilterFunction;
   this.watched = Object.create(null);
   this.timeout = null;
-  this.sequence = this.build();
+  this.currentBuild = this.build();
 }
 
 Watcher.prototype = Object.create(EventEmitter.prototype);
@@ -49,7 +49,7 @@ Watcher.prototype.scheduleBuild = function (filePath) {
   }
   // we want the current promise to be waiting for the current build regardless if it fails or not
   // can't use finally because we want to be able to affect the result.
-  this.sequence = this.sequence.then(timoutThenBuild, timoutThenBuild);
+  this.currentBuild = this.currentBuild.then(timoutThenBuild, timoutThenBuild);
 };
 
 Watcher.prototype.build = function Watcher_build(filePath) {
@@ -136,5 +136,5 @@ Watcher.prototype.close = function () {
 };
 
 Watcher.prototype.then = function(success, fail) {
-  return this.sequence.then(success, fail);
+  return this.currentBuild.then(success, fail);
 };
