@@ -1,23 +1,18 @@
 var Promise = require('rsvp').Promise;
 
-module.exports = TestFilter;
-function TestFilter(inputs, output) {
-  this.inputs = inputs;
-  this.output = output;
+var Plugin = require('broccoli-plugin');
+var path = require('path');
+
+TestFilter.prototype = Object.create(Plugin.prototype);
+TestFilter.prototype.constructor = TestFilter;
+
+function TestFilter(inputNodes, outputFunc) {
+  Plugin.call(this, inputNodes, {});
+  this.outputFunc = outputFunc;
 }
 
-TestFilter.prototype.read = function (readTree) {
-  var inputs = this.inputs;
-  var output = this.output;
-  var sequence = Promise.resolve();
-
-  this.inputs.forEach(function (input) {
-    sequence = sequence.then(function () {
-      return readTree(input);
-    });
-  });
-
-  return sequence.then(function () {
-    return output();
-  });
+TestFilter.prototype.build = function () {
+  this.outputFunc();
 };
+
+module.exports = TestFilter;

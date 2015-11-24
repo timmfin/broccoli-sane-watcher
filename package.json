@@ -28,7 +28,8 @@
     "sane": "^1.1.1"
   },
   "devDependencies": {
-    "broccoli": "^0.15.3",
+    "broccoli": "^1.0.0-beta.5",
+    "broccoli-plugin": "^1.2.1",
     "mocha": "^2.0.1",
     "rimraf": "^2.2.8"
   }

@@ -54,7 +54,6 @@ Watcher.prototype.scheduleBuild = function (filePath) {
 
 Watcher.prototype.build = function Watcher_build(filePath) {
   debug('build: %s', filePath);
-  var addWatchDir = this.addWatchDir.bind(this);
   var triggerChange = this.triggerChange.bind(this);
   var triggerError = this.triggerError.bind(this);
 
@@ -66,14 +65,9 @@ Watcher.prototype.build = function Watcher_build(filePath) {
     return run;
   }
 
-  function appendFilePath(hash) {
-    hash.filePath = filePath;
-    return hash;
-  }
+  this.builder.watchedPaths.forEach(this.addWatchDir.bind(this));
 
-  return this.builder
-    .build(addWatchDir)
-    .then(appendFilePath)
+  return this.builder.build()
     .then(triggerChange, triggerError)
     .then(verboseOutput.bind(this));
 };
